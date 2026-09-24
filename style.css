@@ -365,18 +365,19 @@ input, textarea, button { font-family: inherit; }
   flex-wrap: wrap;
   cursor: pointer;
   transition: background 0.15s;
+  color: var(--negro);
 }
 
 .site-footer:hover { background: var(--amarillo-2); }
 
-.site-footer a {
+.site-footer span {
   font-family: 'Outfit', sans-serif;
   font-weight: 900;
   font-size: 0.78rem;
   letter-spacing: 0.08em;
   color: var(--negro);
   text-decoration: none;
-  pointer-events: none;
+  -webkit-font-smoothing: antialiased;
 }
 
 .site-footer .sep { color: var(--negro); font-weight: 900; }
