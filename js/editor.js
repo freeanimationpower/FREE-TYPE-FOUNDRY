@@ -2,9 +2,10 @@
   'use strict';
 
   var HIT_PX = 7;
-  var WIN = { minX: -100, maxX: 1080, minY: -300, maxY: 860 };
-  var HOVER_ON = '#ff3300';
-  var HOVER_OFF = '#ff5c33';
+  var WIN_Y = { minY: -320, maxY: 880 };
+  var HALF_W = 640;
+  var HOVER_ON = '#ffdc00';
+  var HOVER_OFF = '#ffe733';
   var SELECT_PT = '#ff4200';
 
   function labelChar(u) {
@@ -39,19 +40,26 @@
     var k = this.k();
     return {
       k: k,
-      w: Math.round((WIN.maxX - WIN.minX) * k),
-      h: Math.round((WIN.maxY - WIN.minY) * k)
+      w: Math.round(HALF_W * 2 * k),
+      h: Math.round((WIN_Y.maxY - WIN_Y.minY) * k)
     };
   };
 
-  GridEditor.prototype.worldToLocal = function (p) {
-    var k = this.k();
-    return { x: (p.x - WIN.minX) * k, y: (WIN.maxY - p.y) * k };
+  GridEditor.prototype._cellWin = function (entry) {
+    var cx = (entry.glyph.advanceWidth || 0) / 2;
+    return { minX: cx - HALF_W, maxX: cx + HALF_W };
   };
 
-  GridEditor.prototype.localToWorld = function (s) {
+  GridEditor.prototype.worldToLocal = function (p, entry) {
     var k = this.k();
-    return { x: s.x / k + WIN.minX, y: WIN.maxY - s.y / k };
+    var win = this._cellWin(entry);
+    return { x: (p.x - win.minX) * k, y: (WIN_Y.maxY - p.y) * k };
+  };
+
+  GridEditor.prototype.localToWorld = function (s, entry) {
+    var k = this.k();
+    var win = this._cellWin(entry);
+    return { x: s.x / k + win.minX, y: WIN_Y.maxY - s.y / k };
   };
 
   GridEditor.prototype.snapshot = function (g) {
@@ -91,9 +99,12 @@
       var hx = document.createElement('div');
       hx.className = 'ghex';
       hx.textContent = u.toString(16).toUpperCase().padStart(4, '0');
+      var head = document.createElement('div');
+      head.className = 'ghead';
+      head.appendChild(lbl);
+      head.appendChild(hx);
+      cell.appendChild(head);
       cell.appendChild(cv);
-      cell.appendChild(lbl);
-      cell.appendChild(hx);
       cell.title = 'U+' + hx.textContent + ' · ' + g.name;
       this.container.appendChild(cell);
       this._cells.set(u, { cell: cell, canvas: cv, glyph: g });
@@ -141,18 +152,19 @@
     var ctx = entry.canvas.getContext('2d');
     var dpr = global.devicePixelRatio || 1;
     var k = this.k();
+    var win = this._cellWin(entry);
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.clearRect(0, 0, entry.canvas.width, entry.canvas.height);
-    ctx.setTransform(dpr * k, 0, 0, -dpr * k, -WIN.minX * dpr * k, WIN.maxY * dpr * k);
+    ctx.setTransform(dpr * k, 0, 0, -dpr * k, -win.minX * dpr * k, WIN_Y.maxY * dpr * k);
     entry.drawn = true;
-    this._renderGuides(ctx, entry);
+    this._renderGuides(ctx, entry, win);
     this._renderGlyph(ctx, entry);
     this._renderSelection(ctx, entry);
     this._renderDraft(ctx, entry);
     this._renderStroke(ctx, entry);
   };
 
-  GridEditor.prototype._renderGuides = function (ctx, entry) {
+  GridEditor.prototype._renderGuides = function (ctx, entry, win) {
     var k = this.k();
     var lines = [
       { y: 0, color: 'rgba(255,66,0,0.85)', width: 1.3 },
@@ -166,23 +178,23 @@
       ctx.strokeStyle = lines[i].color;
       ctx.lineWidth = lines[i].width / k;
       ctx.beginPath();
-      ctx.moveTo(WIN.minX, lines[i].y);
-      ctx.lineTo(WIN.maxX, lines[i].y);
+      ctx.moveTo(win.minX, lines[i].y);
+      ctx.lineTo(win.maxX, lines[i].y);
       ctx.stroke();
     }
     ctx.strokeStyle = 'rgba(122,117,98,0.35)';
     ctx.lineWidth = 0.8 / k;
     ctx.beginPath();
-    ctx.moveTo(0, WIN.minY);
-    ctx.lineTo(0, WIN.maxY);
+    ctx.moveTo(0, WIN_Y.minY);
+    ctx.lineTo(0, WIN_Y.maxY);
     ctx.stroke();
 
     ctx.strokeStyle = 'rgba(47,107,255,0.7)';
     ctx.lineWidth = 1.1 / k;
     ctx.setLineDash([7 / k, 5 / k]);
     ctx.beginPath();
-    ctx.moveTo(entry.glyph.advanceWidth, WIN.minY);
-    ctx.lineTo(entry.glyph.advanceWidth, WIN.maxY);
+    ctx.moveTo(entry.glyph.advanceWidth, WIN_Y.minY);
+    ctx.lineTo(entry.glyph.advanceWidth, WIN_Y.maxY);
     ctx.stroke();
     ctx.setLineDash([]);
   };
@@ -430,7 +442,7 @@
     for (var ci = 0; ci < g.contours.length; ci++) {
       var contour = g.contours[ci];
       for (var pi = 0; pi < contour.length; pi++) {
-        var s = this.worldToLocal(contour[pi]);
+        var s = this.worldToLocal(contour[pi], entry);
         var d = Math.hypot(s.x - lx, s.y - ly);
         if (d < bestD) {
           bestD = d;
@@ -453,14 +465,14 @@
           for (var i = 0; i <= 24; i++) {
             var tt = i / 24;
             var qp = FTG.quadPoint(a, ctrl, b, tt);
-            var sp = this.worldToLocal(qp);
+            var sp = this.worldToLocal(qp, entry);
             var dd = Math.hypot(sp.x - lx, sp.y - ly);
             if (dd < minD) { minD = dd; t = tt; }
           }
           d = minD;
         } else {
-          var sa = this.worldToLocal(a);
-          var sb = this.worldToLocal(b);
+          var sa = this.worldToLocal(a, entry);
+          var sb = this.worldToLocal(b, entry);
           d = FTG.distToSegment({ x: lx, y: ly }, sa, sb);
           var dx = sb.x - sa.x, dy = sb.y - sa.y;
           var l2 = dx * dx + dy * dy;
@@ -483,7 +495,7 @@
     var u = entry.glyph.unicode;
     this.selectGlyph(u);
     var loc = this._evLocal(e, entry);
-    var w = this.localToWorld(loc);
+    var w = this.localToWorld(loc, entry);
     this.selection = null;
 
     if (this.tool === 'draw') {
@@ -583,7 +595,7 @@
     if (!entry) return;
     var u = entry.glyph.unicode;
     var loc = this._evLocal(e, entry);
-    var w = this.localToWorld(loc);
+    var w = this.localToWorld(loc, entry);
 
     if (this.stroke && this.stroke.u === u) {
       var last = this.stroke.samples[this.stroke.samples.length - 1];
@@ -787,4 +799,5 @@
 
   global.FTGridEditor = GridEditor;
 })(typeof window !== 'undefined' ? window : globalThis);
+
 

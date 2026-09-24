@@ -45,12 +45,16 @@
     var entryA = editor._cells.get(65);
     log('canvas con tamaño', entryA.canvas.width > 100 && entryA.canvas.height > 100, entryA.canvas.width + 'x' + entryA.canvas.height);
 
-    var sp = editor.worldToLocal({ x: 250, y: 700 });
-    var back = editor.localToWorld(sp);
+    var sp = editor.worldToLocal({ x: 250, y: 700 }, entryA);
+    var back = editor.localToWorld(sp, entryA);
     log('transform ida/vuelta', Math.abs(back.x - 250) < 0.001 && Math.abs(back.y - 700) < 0.001);
 
-    var up = editor.worldToLocal({ x: 100, y: 0 });
-    log('y-flip: punto base abajo', up.y > editor.worldToLocal({ x: 100, y: 700 }).y, 'base y=' + up.y.toFixed(0) + ' top y=' + editor.worldToLocal({ x: 100, y: 700 }).y.toFixed(0));
+    var up = editor.worldToLocal({ x: 100, y: 0 }, entryA);
+    log('y-flip: punto base abajo', up.y > editor.worldToLocal({ x: 100, y: 700 }, entryA).y, 'base y=' + up.y.toFixed(0) + ' top y=' + editor.worldToLocal({ x: 100, y: 700 }, entryA).y.toFixed(0));
+
+    var mid = editor.worldToLocal({ x: glyphA.advanceWidth / 2, y: 0 }, entryA);
+    var halfW = editor.metrics().w / 2;
+    log('avance centrado en la celda', Math.abs(mid.x - halfW) < 0.5, 'centro=' + mid.x.toFixed(1) + ' esperado=' + halfW.toFixed(1));
 
     editor.selectGlyph(65);
     log('seleccion A', entryA.cell.classList.contains('active'));

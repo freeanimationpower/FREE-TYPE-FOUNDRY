@@ -1,4 +1,4 @@
-# Free Type Foundry
+﻿# Free Type Foundry
 
 ![Free Type Foundry](LOGO%20FREE%20TYPE%20FOUNDRY.png)
 
@@ -160,10 +160,11 @@ FREE-TYPE-FOUNDRY/
 
 El tablero es una cuadrícula de **6 columnas centradas** que fluye hacia abajo. Cada celda contiene:
 
+- **Franja de cabecera** (fuera del área de dibujo, para no tapar puntos): el círculo naranja con la letra y, a la derecha, el código Unicode.
 - **Lienzo blanco**: la letra dibujada en negro intenso con sus puntos de edición visibles.
-- **Círculo naranja** (esquina superior izquierda): la letra o símbolo que representa esa celda, en negro.
-- **Código Unicode** (esquina inferior derecha): el valor hexadecimal del carácter sobre pastilla naranja translúcida.
 - **Línea azul punteada**: el avance del glifo.
+
+Cada celda muestra su glifo **centrado dentro de su propio avance**: la ventana visible se centra en `avance/2` con márgenes laterales simétricos (640 unidades a cada lado), de modo que letras angostas y anchas se ven igualmente centradas, nunca corridas hacia un lado.
 
 ### Filtros
 
@@ -209,6 +210,8 @@ Cada recuadro muestra las líneas métricas del diseño tipográfico, todas en e
 | Descendente | −200 | Gris claro | Tope inferior de g, p, q, y |
 | Origen | x = 0 | Gris claro | Margen izquierdo de la letra |
 | Avance | x = avance | Azul punteado | Dónde empieza la siguiente letra |
+
+La ventana vertical tiene márgenes simétricos (−320 a +880) y la horizontal se centra en la mitad del avance de cada glifo, garantizando que toda letra quede visualmente centrada y con espacio equivalente arriba y abajo.
 
 Al estar todas las celdas en la misma escala, las guías permiten comparar visualmente el tamaño de cada letra contra las demás.
 
@@ -424,3 +427,4 @@ php -S 127.0.0.1:8899 -t .
 - **GitHub:** [github.com/freeanimationpower](https://github.com/freeanimationpower)
 
 Las fuentes que crees con esta herramienta son **tuyas**: la GPL cubre el editor, no lo que dibujas con él.
+

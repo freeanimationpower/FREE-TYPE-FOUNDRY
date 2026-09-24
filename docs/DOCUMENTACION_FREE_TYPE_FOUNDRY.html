@@ -184,12 +184,12 @@ FREE-TYPE-FOUNDRY/
 <p><strong>main.js</strong> — Estado global, planilla con filtros y buscador, undo/redo (200 entradas), topbar (nueva/subir/guardar/abrir/exportar), atajos y slider de celda.</p>
 
 <h2 id="q5">5. El tablero de letras (planilla)</h2>
-<p>Cuadrícula de <strong>6 columnas centradas</strong> que fluye hacia abajo. Cada celda contiene:</p>
+<p>Cuadrícula de <strong>6 columnas centradas</strong> que fluye hacia abajo. Cada celda muestra su glifo <strong>centrado dentro de su propio avance</strong>: la ventana visible se centra en <code>avance/2</code> con márgenes laterales simétricos de 640 unidades a cada lado, de modo que letras angostas y anchas se ven igualmente centradas. Cada celda contiene:</p>
 <ul>
   <li><strong>Lienzo blanco</strong>: la letra en negro intenso con sus puntos de edición visibles.</li>
-  <li><strong>Círculo naranja</strong> (arriba a la izquierda): la letra o símbolo de esa celda, en negro.</li>
+  <li><strong>Franja de cabecera</strong> (fuera del área de dibujo, para no tapar puntos): círculo naranja con la letra y código Unicode a la derecha.</li>
   <li><strong>Código Unicode</strong> (abajo a la derecha): valor hexadecimal sobre pastilla naranja translúcida.</li>
-  <li><strong>Línea azul punteada</strong>: el avance del glifo.</li>
+  <li><strong>Línea azul punteada</strong>: el avance del glifo.</li></ul><p>La ventana vertical tiene márgenes simétricos (−320 a +880), garantizando espacio equivalente arriba y abajo del área tipográfica.</p>
 </ul>
 <h3>Filtros</h3>
 <table>
@@ -387,6 +387,7 @@ node tests/flip.js           inspección de comandos exportados
 
 </body>
 </html>
+
 
 
 
