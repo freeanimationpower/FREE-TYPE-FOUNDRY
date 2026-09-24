@@ -25,11 +25,13 @@ También: **Suavizar**, **Curva**, **Recta** (actúan sobre lo seleccionado) y *
 
 ## Trucos
 
-- Círculo naranja = qué letra es cada cuadro · código debajo.
+- Cabecera de cada recuadro: círculo naranja = qué letra es · código Unicode a la derecha.
+- Cada letra queda **centrada automáticamente dentro de su propio avance** al importar.
 - Línea roja = base de la letra · línea azul punteada = avance.
 - Slider **Celda** (o `+` / `-`) agranda todas las celdas juntas.
 - `Ctrl+Z` deshace · `Ctrl+Y` rehace · `Esc` cancela.
 - **Guardar proyecto** genera un `.ftf` para continuar otro día.
+- En móvil y tablet el tablero adapta sus columnas solo (6/4/2) y puedes dibujar con el dedo.
 
 ## Exportar e instalar
 
