@@ -321,6 +321,10 @@
       this.value = state.familyName;
     });
 
+    $('siteFooter').addEventListener('click', function () {
+      window.open('https://www.freeanimationpower.org', '_blank', 'noopener');
+    });
+
     $('advanceWidth').addEventListener('change', function () {
       var g = state.glyphs.get(state.selected);
       if (!g) return;
