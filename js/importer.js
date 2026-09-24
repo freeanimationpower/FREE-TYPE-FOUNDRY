@@ -14,10 +14,23 @@
       if (u == null || u === 0 || u === undefined) continue;
       if (glyphs.has(u)) continue;
       var contours = FTG.commandsToContours(g.path.commands || [], scale);
+      var adv = Math.max(1, Math.round((g.advanceWidth || 0) * scale));
+      if (contours.length) {
+        var b = FTG.glyphBounds(contours);
+        var dx = Math.round(adv / 2 - (b.minX + b.maxX) / 2);
+        if (dx !== 0) {
+          for (var ci = 0; ci < contours.length; ci++) {
+            var c = contours[ci];
+            for (var pi = 0; pi < c.length; pi++) {
+              c[pi].x += dx;
+            }
+          }
+        }
+      }
       glyphs.set(u, {
         unicode: u,
         name: g.name || FTG.glyphNameFor(u),
-        advanceWidth: Math.max(1, Math.round((g.advanceWidth || 0) * scale)),
+        advanceWidth: adv,
         contours: contours
       });
     }

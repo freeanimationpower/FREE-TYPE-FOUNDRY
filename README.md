@@ -294,7 +294,8 @@ El **sentido del giro** de cada contorno determina el relleno en la convención 
 3. `opentype.parse()` interpreta las tablas (cmap, glyf/CFF, hmtx, head...).
 4. Se normaliza a **1000 UPM** multiplicando coordenadas y avances por `1000/unitsPerEm` (Arial usa 2048; Roboto, 2048; OTF suelen usar 1000).
 5. Solo se importan glifos con Unicode asignado y no duplicados; `.notdef` se regenera en la exportación.
-6. El tablero se rellena con las celdas correspondientes y se selecciona la primera letra dibujada.
+6. Cada glifo se **centra horizontalmente dentro de su propio avance**: las letras angostas (i, l, puntos) no quedan pegadas a la izquierda de su recuadro.
+7. El tablero se rellena con las celdas correspondientes y se selecciona la primera letra dibujada.
 
 > Importar una fuente **no** sube el archivo a ningún servidor: todo el parse ocurre en memoria, en tu navegador.
 

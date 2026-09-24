@@ -285,7 +285,7 @@ FREE-TYPE-FOUNDRY/
   <li><code>FileReader</code> carga el binario como <code>ArrayBuffer</code>.</li>
   <li><code>opentype.parse()</code> interpreta las tablas (cmap, glyf/CFF, hmtx, head...).</li>
   <li>Normalización a 1000 UPM multiplicando coordenadas y avances por <code>1000/unitsPerEm</code>.</li>
-  <li>Solo se importan glifos con Unicode asignado, sin duplicados; <code>.notdef</code> se regenera al exportar.</li>
+  <li>Solo se importan glifos con Unicode asignado, sin duplicados; <code>.notdef</code> se regenera al exportar.</li><li>Cada glifo se <strong>centra horizontalmente dentro de su propio avance</strong>: las letras angostas (i, l, puntos) no quedan pegadas a la izquierda de su recuadro.</li>
   <li>El tablero se rellena y se selecciona la primera letra dibujada.</li>
 </ol>
 <div class="nota"><strong>Nota:</strong> importar no sube el archivo a ningún servidor: todo el parse ocurre en memoria, en el navegador.</div>
@@ -387,5 +387,6 @@ node tests/flip.js           inspección de comandos exportados
 
 </body>
 </html>
+
 
 
