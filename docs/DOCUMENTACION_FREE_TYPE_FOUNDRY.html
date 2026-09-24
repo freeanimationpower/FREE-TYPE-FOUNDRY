@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Free Type Foundry — Documentación completa</title>
+<style>
+  @page { margin: 22mm 18mm; }
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    color: #141410;
+    line-height: 1.55;
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 28px 18px 60px;
+    font-size: 10.5pt;
+  }
+  .portada { text-align: center; margin-bottom: 34px; }
+  .portada img { width: 150px; height: 150px; margin-bottom: 12px; }
+  .portada h1 { font-size: 27pt; margin: 0 0 6px; letter-spacing: -0.5px; }
+  .portada .sub { font-size: 11.5pt; color: #555; margin: 0 0 4px; }
+  .portada .url { font-size: 10pt; color: #ff3300; font-weight: 700; letter-spacing: 0.06em; }
+  .meta { margin-top: 16px; font-size: 9pt; color: #666; }
+  h2 {
+    font-size: 15pt;
+    border-bottom: 3px solid #ff3300;
+    padding-bottom: 4px;
+    margin: 30px 0 12px;
+    color: #0c0c09;
+    page-break-after: avoid;
+  }
+  h3 { font-size: 11.5pt; margin: 18px 0 6px; color: #ff3300; page-break-after: avoid; }
+  p { margin: 7px 0; }
+  ul, ol { margin: 7px 0 7px 22px; padding: 0; }
+  li { margin: 3.5px 0; }
+  table { border-collapse: collapse; width: 100%; margin: 12px 0; font-size: 9.3pt; }
+  th, td { border: 1px solid #d9d4c4; padding: 6px 9px; text-align: left; vertical-align: top; }
+  th { background: #141410; color: #fff; }
+  tr:nth-child(even) td { background: #f7f4ea; }
+  code {
+    font-family: Consolas, 'Courier New', monospace;
+    background: #f2efe3;
+    border: 1px solid #e2ddcc;
+    border-radius: 4px;
+    padding: 1px 5px;
+    font-size: 8.8pt;
+  }
+  pre {
+    background: #141410;
+    color: #f5f2e6;
+    border-radius: 8px;
+    padding: 13px 15px;
+    overflow-x: auto;
+    font-size: 8.6pt;
+    line-height: 1.45;
+  }
+  pre code { background: none; border: none; color: inherit; padding: 0; }
+  .nota {
+    background: #fff3ec;
+    border-left: 4px solid #ff3300;
+    padding: 9px 13px;
+    border-radius: 0 8px 8px 0;
+    margin: 12px 0;
+    font-size: 9.4pt;
+  }
+  .kbd {
+    background: #141410;
+    color: #fff;
+    border-radius: 4px;
+    padding: 1px 6px;
+    font-size: 8.4pt;
+    font-weight: 700;
+    font-family: Consolas, monospace;
+  }
+  .pie { margin-top: 42px; border-top: 2px solid #e2ddcc; padding-top: 12px; font-size: 9pt; color: #666; text-align: center; }
+  .toc { background: #f7f4ea; border: 1px solid #e2ddcc; border-radius: 10px; padding: 14px 18px; font-size: 9.6pt; }
+  .toc ol { margin: 6px 0 0 20px; }
+  .toc a { color: #141410; text-decoration: none; }
+  .toc a:hover { color: #ff3300; }
+</style>
+</head>
+<body>
+
+<div class="portada">
+  <img src="LOGO FREE TYPE FOUNDRY.png" alt="Free Type Foundry">
+  <h1>Free Type Foundry</h1>
+  <p class="sub">Editor de tipografías 100% en el navegador</p>
+  <p class="sub">Sube una fuente, edita cada letra en su recuadro y exporta tu propia fuente TTF instalable</p>
+  <p class="url">www.freeanimationpower.org</p>
+  <div class="meta">
+    Documentación técnica completa · Versión 1.0 · Septiembre 2026<br>
+    Autor: Eduardo Fierro Duque · Ecosistema Free Animation Power · Licencia GPL v3.0
+  </div>
+</div>
+
+<div class="toc">
+  <strong>Contenido</strong>
+  <ol>
+    <li><a href="#q1">¿Qué es Free Type Foundry?</a></li>
+    <li><a href="#q2">Características principales</a></li>
+    <li><a href="#q3">Ejecución de la aplicación</a></li>
+    <li><a href="#q4">Estructura de archivos</a></li>
+    <li><a href="#q5">El tablero de letras (planilla)</a></li>
+    <li><a href="#q6">Guías métricas de cada recuadro</a></li>
+    <li><a href="#q7">Herramientas de edición</a></li>
+    <li><a href="#q8">El motor geométrico Bézier</a></li>
+    <li><a href="#q9">Modelo de datos de un glifo</a></li>
+    <li><a href="#q10">Importación de fuentes</a></li>
+    <li><a href="#q11">Exportación a TTF</a></li>
+    <li><a href="#q12">Proyectos .ftf</a></li>
+    <li><a href="#q13">Deshacer y rehacer</a></li>
+    <li><a href="#q14">Atajos de teclado</a></li>
+    <li><a href="#q15">Estandarización de tamaños</a></li>
+    <li><a href="#q16">Pruebas automatizadas</a></li>
+    <li><a href="#q17">Dependencias</a></li>
+    <li><a href="#q18">Hoja de ruta</a></li>
+    <li><a href="#q19">Licencia y créditos</a></li>
+  </ol>
+</div>
+
+<h2 id="q1">1. ¿Qué es Free Type Foundry?</h2>
+<p>Free Type Foundry es una <strong>fundición tipográfica digital que corre 100% en el navegador</strong>. Su concepto central: todas las letras y símbolos de una fuente viven en un tablero de recuadros — uno por carácter — y cada recuadro es un mini-editor vectorial independiente.</p>
+<p>No requiere instalación ni servidor: se abre con doble clic en <code>index.html</code>. Importar, editar y exportar ocurre íntegramente en el computador del usuario; ningún dato se sube a servidores externos.</p>
+<p><strong>Flujo típico:</strong></p>
+<ol>
+  <li>Empieza con la fuente en blanco (caracteres ASCII y Latín-1 pre-creados) o sube una fuente existente para modificarla.</li>
+  <li>Edita cada letra en su recuadro: mueve puntos, añade curvas, dibuja trazos.</li>
+  <li>Exporta el TTF y lo instalas en tu sistema operativo.</li>
+</ol>
+
+<h2 id="q2">2. Características principales</h2>
+<table>
+  <tr><th>Función</th><th>Detalle</th></tr>
+  <tr><td>Importación</td><td>TTF, OTF, WOFF y WOFF2; cualquier upm se normaliza a 1000</td></tr>
+  <tr><td>Tablero</td><td>Un recuadro por letra, con círculo naranja (letra) y código Unicode</td></tr>
+  <tr><td>Edición de puntos</td><td>Puntos on-curve (cuadrados) y off-curve (círculos) arrastrables</td></tr>
+  <tr><td>Añadir puntos</td><td>Clic sobre un trazo inserta un punto que preserva la forma</td></tr>
+  <tr><td>Dibujo libre</td><td>Trazo con presión de lápiz convertido en contorno vectorial suavizado</td></tr>
+  <tr><td>Líneas rectas</td><td>Contornos polígono punto a punto</td></tr>
+  <tr><td>Curvas</td><td>Conversión recta ↔ curva por segmento y suavizado de esquinas</td></tr>
+  <tr><td>Borrado seguro</td><td>Vista previa en rojo del contorno antes de eliminarlo</td></tr>
+  <tr><td>Avance</td><td>Advance width editable por glifo (línea azul punteada)</td></tr>
+  <tr><td>Guías</td><td>Línea base, altura x, mayúsculas, ascendente y descendente</td></tr>
+  <tr><td>Zoom global</td><td>Slider que agranda todas las celdas a la vez</td></tr>
+  <tr><td>Exportación</td><td>TTF estándar con metadatos completos</td></tr>
+  <tr><td>Proyectos</td><td>Guardar/abrir como .ftf (JSON)</td></tr>
+  <tr><td>Deshacer</td><td>Historial de 200 acciones (Ctrl+Z / Ctrl+Y)</td></tr>
+</table>
+
+<h2 id="q3">3. Ejecución de la aplicación</h2>
+<p>La app es estática (HTML + CSS + JS). Solo se necesita internet la primera vez para cargar <code>opentype.js</code> desde CDN.</p>
+<ul>
+  <li><strong>Opción A (directo):</strong> doble clic en <code>index.html</code>.</li>
+  <li><strong>Opción B (servidor local):</strong> <code>php -S 127.0.0.1:8899 -t .</code> y abrir <code>http://127.0.0.1:8899/index.html</code>.</li>
+  <li><strong>Opción C (producción):</strong> se empaqueta como <code>tools/font/index.php</code> dentro del hub Free Animation Power, detrás del email-gate de sesión.</li>
+</ul>
+
+<h2 id="q4">4. Estructura de archivos</h2>
+<pre>
+FREE-TYPE-FOUNDRY/
+├── index.html                    Interfaz completa
+├── style.css                     Tema corporativo (negro + naranja #ff3300)
+├── favicon.png                   Logo 64x64
+├── LOGO FREE TYPE FOUNDRY.png    Logo oficial 1254x1254
+├── js/
+│   ├── geometry.js               Motor geométrico Bézier (cero dependencias)
+│   ├── importer.js               Parse TTF/OTF/WOFF → modelo interno
+│   ├── exporter.js               Modelo interno → TTF + proyectos .ftf
+│   ├── editor.js                 FTGridEditor: render e interacción del tablero
+│   └── main.js                   Estado global, UI, undo/redo, atajos
+├── tests/                        Pruebas Node + harness de navegador
+├── docs/                         Documentación (HTML y PDF)
+├── GUIA-RAPIDA.md                Guía simplificada
+└── README.md                     Documentación completa (markdown)
+</pre>
+
+<h3>Responsabilidades de cada módulo</h3>
+<p><strong>geometry.js</strong> — Puro, funciona en Node y navegador. Define <code>normalizeContour()</code> (resuelve puntos implícitos de TrueType), <code>eachSegment()</code>, <code>commandsToContours()/contoursToCommands()</code>, <code>cubicToQuadratic()</code> (cúbicas → cuadráticas con tolerancia 0.5), <code>insertPointOnSegment()</code> (división por de Casteljau), <code>removePointAt()</code>, <code>smoothAt()</code>, <code>setSegmentCurved()</code>, <code>strokeToContour()</code> (trazo → contorno: offset izquierdo/derecho, Ramer–Douglas–Peucker y Chaikin) y <code>glyphNameFor()</code>.</p>
+<p><strong>importer.js</strong> — <code>parseFont()</code> lee el binario con <code>opentype.parse()</code>, normaliza a 1000 UPM, conserva solo glifos con Unicode, convierte comandos a contornos internos y devuelve <code>{familyName, glyphs, count}</code>. <code>defaultGlyphSet()</code> crea la fuente en blanco (códigos 32–126 y 161–255, avance 620).</p>
+<p><strong>exporter.js</strong> — <code>buildFont()</code> crea <code>.notdef</code> (glifo 0), ordena por Unicode, construye cada glifo con su Path Q y escribe metadatos (familia, diseñador, fabricante, licencia, versión, copyright). <code>toArrayBuffer()</code> produce el binario TTF. También <code>serializeProject()/deserializeProject()</code>.</p>
+<p><strong>editor.js</strong> — <code>FTGridEditor</code>: construye celdas DOM con render diferido (IntersectionObserver), pinta guías, glifo en negro intenso, puntos, selección, borrador y trazo en curso. Transformación mundo↔celda con eje Y volteado (evita letras cabeza abajo). Hit-testing de puntos (7px) y segmentos (25 muestras en curvas). Arrastre con Pointer Events y captura de puntero. <code>_commit()</code> alimenta el historial con snapshots.</p>
+<p><strong>main.js</strong> — Estado global, planilla con filtros y buscador, undo/redo (200 entradas), topbar (nueva/subir/guardar/abrir/exportar), atajos y slider de celda.</p>
+
+<h2 id="q5">5. El tablero de letras (planilla)</h2>
+<p>Cuadrícula de <strong>6 columnas centradas</strong> que fluye hacia abajo. Cada celda contiene:</p>
+<ul>
+  <li><strong>Lienzo blanco</strong>: la letra en negro intenso con sus puntos de edición visibles.</li>
+  <li><strong>Círculo naranja</strong> (arriba a la izquierda): la letra o símbolo de esa celda, en negro.</li>
+  <li><strong>Código Unicode</strong> (abajo a la derecha): valor hexadecimal sobre pastilla naranja translúcida.</li>
+  <li><strong>Línea azul punteada</strong>: el avance del glifo.</li>
+</ul>
+<h3>Filtros</h3>
+<table>
+  <tr><th>Filtro</th><th>Rango</th><th>Uso</th></tr>
+  <tr><td>Básico</td><td>U+0020 – U+007E</td><td>Mayúsculas, minúsculas, números y signos comunes</td></tr>
+  <tr><td>Latín-1</td><td>U+00A1 – U+00FF</td><td>Acentos y signos: á é í ó ú ñ ¿ ¡</td></tr>
+  <tr><td>Puntos</td><td>Signos de puntuación</td><td>, . ; : ! ? ...</td></tr>
+  <tr><td>Todo</td><td>Todos</td><td>Fuente completa (importada)</td></tr>
+</table>
+<p>El buscador acepta carácter (<code>A</code>), código (<code>0041</code>) o nombre del glifo. El botón <strong>+ Glifo</strong> añade caracteres nuevos; si ya existen, los selecciona.</p>
+<h3>Tamaño de celda</h3>
+<p>El slider <strong>Celda</strong> (80–260px) agranda o reduce todas las celdas a la vez manteniendo la escala relativa. Por teclado: <code>+</code>, <code>-</code> y <code>0</code> (reset 140px).</p>
+
+<h2 id="q6">6. Guías métricas de cada recuadro</h2>
+<table>
+  <tr><th>Guía</th><th>Valor (y)</th><th>Color</th><th>Significado</th></tr>
+  <tr><td>Ascendente</td><td>+800</td><td>Gris claro</td><td>Tope de b, d, h</td></tr>
+  <tr><td>Altura mayúsculas</td><td>+700</td><td>Verde</td><td>Tope de A, B, C</td></tr>
+  <tr><td>Altura x</td><td>+500</td><td>Azul</td><td>Tope de a, e, o</td></tr>
+  <tr><td>Línea base</td><td>0</td><td>Roja</td><td>Donde se apoyan las letras</td></tr>
+  <tr><td>Descendente</td><td>−200</td><td>Gris claro</td><td>Tope de g, p, q, y</td></tr>
+  <tr><td>Origen</td><td>x = 0</td><td>Gris claro</td><td>Margen izquierdo</td></tr>
+  <tr><td>Avance</td><td>x = avance</td><td>Azul punteado</td><td>Inicio de la siguiente letra</td></tr>
+</table>
+
+<h2 id="q7">7. Herramientas de edición</h2>
+<table>
+  <tr><th>Herramienta</th><th>Tecla</th><th>Comportamiento</th></tr>
+  <tr><td><strong>Mover</strong></td><td>V</td><td>Arrastra puntos on-curve (cuadrados) y off-curve (círculos naranjas). Mover un punto on-curve arrastra consigo sus controles adyacentes. Arrastrar un trazo mueve el contorno completo. Clic sobre un trazo lo selecciona para Curva/Recta.</td></tr>
+  <tr><td><strong>Punto</strong></td><td>A</td><td>Clic sobre un trazo inserta un punto preservando la forma (en curvas divide la cuadrática exactamente en el clic).</td></tr>
+  <tr><td><strong>Borrar</strong></td><td>D</td><td>Clic sobre un punto lo elimina y re-normaliza el contorno.</td></tr>
+  <tr><td><strong>Dibujar</strong></td><td>B</td><td>Trazo libre con presión. Al soltar se convierte en contorno cerrado y suavizado. Grosor configurable (10–200).</td></tr>
+  <tr><td><strong>Línea</strong></td><td>L</td><td>Contorno de segmentos rectos clic a clic. Doble clic o Enter cierra; Esc cancela.</td></tr>
+  <tr><td><strong>Contorno</strong></td><td>E</td><td>Borra un contorno completo. Vista previa en rojo punteado; solo borra si el clic cae exactamente sobre el trazo (4.5px).</td></tr>
+</table>
+<h3>Botones estructurales</h3>
+<ul>
+  <li><strong>Suavizar:</strong> convierte la esquina del punto seleccionado en curva continua.</li>
+  <li><strong>Curva:</strong> añade un control en el punto medio del segmento seleccionado.</li>
+  <li><strong>Recta:</strong> elimina el control del segmento seleccionado.</li>
+  <li><strong>Vaciar:</strong> borra todos los contornos del glifo seleccionado (con confirmación).</li>
+</ul>
+<p>El campo <strong>Avance</strong> de la barra inferior define el desplazamiento tras la letra y se refleja como línea azul punteada; es parte del historial de deshacer.</p>
+
+<h2 id="q8">8. El motor geométrico Bézier</h2>
+<h3>Por qué cuadráticas</h3>
+<p>TrueType (.ttf) representa contornos con <strong>Bézier cuadráticas</strong>: segmentos entre puntos on-curve con un punto off-curve de control opcional. CFF/OTF usa cúbicas. Free Type Foundry trabaja siempre con cuadráticas, por lo que lo que se ve en pantalla es exactamente lo que se exporta. Al importar OTF, cada cúbica se convierte a cuadráticas con tolerancia de 0.5 unidades.</p>
+<h3>Regla de oro de TrueType</h3>
+<p>Dos puntos off-curve consecutivos implican un punto on-curve en su punto medio. <code>normalizeContour()</code> aplica esta regla y garantiza secuencias válidas: on-curve, (off-curve), on-curve...</p>
+<h3>Del trazo al contorno</h3>
+<ol>
+  <li>Registro de muestras del puntero con su presión (0–1).</li>
+  <li>Offset izquierdo/derecho perpendicular, con ancho proporcional a la presión (<code>grosor × (0.25 + 0.75 × presión)</code>).</li>
+  <li>Simplificación con Ramer–Douglas–Peucker (tolerancia 1.5).</li>
+  <li>Suavizado de esquinas con Chaikin (patrón alternado on/off-curve).</li>
+  <li>Normalización y añadido del contorno al glifo.</li>
+</ol>
+
+<h2 id="q9">9. Modelo de datos de un glifo</h2>
+<pre>
+{
+  unicode: 65,
+  name: 'A',
+  advanceWidth: 620,
+  contours: [
+    [
+      { x: 100, y: 0,   on: true  },
+      { x: 180, y: 350, on: false },
+      { x: 260, y: 0,   on: true  },
+      { x: 260, y: 700, on: true  }
+    ]
+  ]
+}
+</pre>
+<p>El sentido del giro de cada contorno define el relleno en la convención non-zero de TrueType. El editor pinta con relleno negro sólido even-odd, por lo que el usuario no gestiona direcciones manualmente.</p>
+
+<h2 id="q10">10. Importación de fuentes</h2>
+<ol>
+  <li><strong>Subir TTF/OTF</strong> abre el selector (`.ttf`, `.otf`, `.woff`, `.woff2`).</li>
+  <li><code>FileReader</code> carga el binario como <code>ArrayBuffer</code>.</li>
+  <li><code>opentype.parse()</code> interpreta las tablas (cmap, glyf/CFF, hmtx, head...).</li>
+  <li>Normalización a 1000 UPM multiplicando coordenadas y avances por <code>1000/unitsPerEm</code>.</li>
+  <li>Solo se importan glifos con Unicode asignado, sin duplicados; <code>.notdef</code> se regenera al exportar.</li>
+  <li>El tablero se rellena y se selecciona la primera letra dibujada.</li>
+</ol>
+<div class="nota"><strong>Nota:</strong> importar no sube el archivo a ningún servidor: todo el parse ocurre en memoria, en el navegador.</div>
+
+<h2 id="q11">11. Exportación a TTF</h2>
+<ol>
+  <li><strong>Exportar TTF</strong> (botón naranja).</li>
+  <li>Se construye la fuente: <code>.notdef</code> como glifo 0 + glifos ordenados por Unicode con sus comandos M/L/Q/Z.</li>
+  <li>Metadatos en la tabla name: familia, subfamilia, nombre completo, PostScript, diseñador (Eduardo Fierro Duque), fabricante y URL (Free Animation Power), licencia GPL v3.0, versión y copyright.</li>
+  <li><code>toArrayBuffer()</code> genera el binario que se descarga como <code>&lt;nombre&gt;.ttf</code>.</li>
+</ol>
+<h3>Instalación</h3>
+<ul>
+  <li><strong>Windows:</strong> doble clic → Instalar.</li>
+  <li><strong>macOS:</strong> doble clic → Instalar fuente.</li>
+  <li><strong>Linux:</strong> copiar a <code>~/.fonts</code> o <code>/usr/share/fonts</code> y ejecutar <code>fc-cache -f</code>.</li>
+</ul>
+
+<h2 id="q12">12. Proyectos .ftf</h2>
+<p>El formato <code>.ftf</code> es un JSON con todo el estado editable. Cada punto se serializa como <code>[x, y, on]</code>. Al abrir se valida el campo <code>app: "freetypefoundry"</code>.</p>
+<pre>
+{
+  "app": "freetypefoundry",
+  "version": 1,
+  "savedAt": "2026-09-24T12:00:00.000Z",
+  "familyName": "Mi Fuente",
+  "glyphs": [
+    { "unicode": 65, "name": "A", "advanceWidth": 620,
+      "contours": [ [ [100, 0, 1], [180, 350, 0], [260, 0, 1] ] ] }
+  ]
+}
+</pre>
+
+<h2 id="q13">13. Deshacer y rehacer</h2>
+<ul>
+  <li>Historial de 200 entradas con snapshots completos (contornos + avance) del glifo afectado.</li>
+  <li><code>Ctrl+Z</code> deshace · <code>Ctrl+Y</code> rehace · botones en la toolbar.</li>
+  <li>Cada acción muestra un toast con su nombre.</li>
+  <li>El historial sobrevive al cambio de celda: deshacer afecta al glifo correcto aunque ya no esté seleccionado.</li>
+</ul>
+
+<h2 id="q14">14. Atajos de teclado</h2>
+<table>
+  <tr><th>Tecla</th><th>Acción</th></tr>
+  <tr><td>V</td><td>Mover</td></tr>
+  <tr><td>A</td><td>Añadir punto</td></tr>
+  <tr><td>D</td><td>Borrar punto</td></tr>
+  <tr><td>B</td><td>Dibujar</td></tr>
+  <tr><td>L</td><td>Línea</td></tr>
+  <tr><td>E</td><td>Borrar contorno</td></tr>
+  <tr><td>Ctrl+Z / Ctrl+Y</td><td>Deshacer / Rehacer</td></tr>
+  <tr><td>Enter</td><td>Cerrar contorno (Línea)</td></tr>
+  <tr><td>Esc</td><td>Cancelar contorno / quitar selección</td></tr>
+  <tr><td>+ / −</td><td>Agrandar / reducir celdas</td></tr>
+  <tr><td>0</td><td>Tamaño de celda por defecto (140px)</td></tr>
+</table>
+
+<h2 id="q15">15. Estandarización de tamaños</h2>
+<p>Todas las celdas comparten la misma ventana de coordenadas (x: −100 a 1080 · y: −300 a 860) y la misma escala. Al importar, todo se normaliza a 1000 UPM. Resultado: una letra que toca la altura de mayúsculas tiene exactamente el mismo tamaño físico en la fuente final que cualquier otra, evitando el problema clásico de las fuentes caseras con tamaños disparejos.</p>
+
+<h2 id="q16">16. Pruebas automatizadas</h2>
+<p>Requiere Node.js ≥ 18 (solo para tests; la app no lo necesita).</p>
+<pre>
+npm install
+node tests/geometry.js       19 tests del motor geométrico
+node tests/export.js         roundtrip: TTF generado → re-leído → verificado
+node tests/import-real.js    importación de arial.ttf real (upm 2048 → 1000)
+node tests/flip.js           inspección de comandos exportados
+</pre>
+<p>El harness de navegador <code>tests/harness.html</code> (14 pruebas integrales) se abre en cualquier navegador o con <code>php -S 127.0.0.1:8899 -t .</code> y visitando <code>/tests/harness.html</code>.</p>
+
+<h2 id="q17">17. Dependencias</h2>
+<ul>
+  <li><strong>opentype.js 1.3.4</strong> (MIT, CDN jsdelivr): única dependencia de runtime. Tercera excepción CDN del ecosistema Free Animation Power (tras p5.js en Glitch y jsPDF en Storyboard).</li>
+  <li>Todo lo demás: vanilla JS, CSS y HTML sin frameworks.</li>
+</ul>
+
+<h2 id="q18">18. Hoja de ruta</h2>
+<ul>
+  <li>Edición de kerning por pares (tabla kern).</li>
+  <li>Múltiples pesos/estilos por proyecto.</li>
+  <li>Ajuste de side bearings arrastrando en pantalla.</li>
+  <li>Plantilla base con proporciones clásicas (roman, cursiva).</li>
+  <li>Previsualización de frase de prueba en vivo.</li>
+  <li>Exportar WOFF2.</li>
+  <li>Integración al hub (tools/font/index.php single-file).</li>
+</ul>
+
+<h2 id="q19">19. Licencia y créditos</h2>
+<ul>
+  <li><strong>Código:</strong> GNU General Public License v3.0 (GPLv3).</li>
+  <li><strong>Autor:</strong> Eduardo Fierro Duque — fierroduque.com</li>
+  <li><strong>Ecosistema:</strong> www.freeanimationpower.org</li>
+  <li><strong>GitHub:</strong> github.com/freeanimationpower</li>
+</ul>
+<p>Las fuentes creadas con esta herramienta son del usuario: la GPL cubre el editor, no lo que se dibuja con él.</p>
+
+<div class="pie">Free Type Foundry · Documentación técnica v1.0 · Free Animation Power · www.freeanimationpower.org</div>
+
+</body>
+</html>

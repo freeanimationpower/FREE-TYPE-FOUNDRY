@@ -1,0 +1,95 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>test harness FTF</title>
+<style>
+#cells { display: grid; gap: 9px; }
+#cells .gcell { position: relative; background: #fff; border: 1px solid #222; overflow: hidden; }
+#cells canvas { display: block; }
+#cells .glabel, #cells .ghex { position: absolute; pointer-events: none; }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/opentype.js@1.3.4/dist/opentype.min.js"></script>
+<script src="../js/geometry.js"></script>
+<script src="../js/importer.js"></script>
+<script src="../js/exporter.js"></script>
+<script src="../js/editor.js"></script>
+</head>
+<body>
+<div id="wrap" style="position:relative;width:1200px;height:800px;overflow:auto">
+  <div id="cells"></div>
+</div>
+<div id="results">RUNNING</div>
+<script>
+(function () {
+  var results = [];
+  function log(name, cond, extra) {
+    results.push((cond ? 'PASS' : 'FAIL') + ' ' + name + (extra ? ' :: ' + extra : ''));
+  }
+  try {
+    var glyphs = new Map();
+    var glyphA = { unicode: 65, name: 'A', advanceWidth: 620, contours: [
+      [{ x: 100, y: 0, on: true }, { x: 250, y: 700, on: true }, { x: 400, y: 0, on: true }]
+    ] };
+    var glyphB = { unicode: 66, name: 'B', advanceWidth: 620, contours: [] };
+    glyphs.set(65, glyphA);
+    glyphs.set(66, glyphB);
+
+    var editor = new FTGridEditor(document.getElementById('cells'), {
+      onSelect: function () {},
+      onChange: function (before, after, label) { window.__lastChange = { before: before, after: after, label: label }; }
+    });
+    editor.setGlyphs(glyphs, [glyphA, glyphB]);
+    log('grid: 2 celdas', document.getElementById('cells').children.length === 2);
+
+    var entryA = editor._cells.get(65);
+    log('canvas con tamaño', entryA.canvas.width > 100 && entryA.canvas.height > 100, entryA.canvas.width + 'x' + entryA.canvas.height);
+
+    var sp = editor.worldToLocal({ x: 250, y: 700 });
+    var back = editor.localToWorld(sp);
+    log('transform ida/vuelta', Math.abs(back.x - 250) < 0.001 && Math.abs(back.y - 700) < 0.001);
+
+    var up = editor.worldToLocal({ x: 100, y: 0 });
+    log('y-flip: punto base abajo', up.y > editor.worldToLocal({ x: 100, y: 700 }).y, 'base y=' + up.y.toFixed(0) + ' top y=' + editor.worldToLocal({ x: 100, y: 700 }).y.toFixed(0));
+
+    editor.selectGlyph(65);
+    log('seleccion A', entryA.cell.classList.contains('active'));
+
+    var hit = editor._hitPoint(entryA, up.x, up.y);
+    log('hit point en (100,0)', !!hit, JSON.stringify(hit));
+
+    var seg = editor._hitSegment(entryA, up.x, up.y);
+    log('hit segment cerca de (100,0)', !!seg, JSON.stringify(seg));
+
+    var ptsBefore = glyphA.contours[0].length;
+    var segIdx = null;
+    FTG.eachSegment(glyphA.contours[0], function (a, c, b, idx) { if (segIdx === null) segIdx = idx; });
+    FTG.insertPointOnSegment(glyphA.contours[0], segIdx, 0.5, null);
+    log('insert punto', glyphA.contours[0].length === ptsBefore + 1, 'antes ' + ptsBefore + ' ahora ' + glyphA.contours[0].length);
+
+    editor.redraw(65);
+    log('redraw ok', true);
+
+    var proj = { familyName: 'Fuente Grid', glyphs: glyphs };
+    var font = FTExporter.buildFont(proj);
+    var ab = font.toArrayBuffer();
+    var reparsed = opentype.parse(ab);
+    var gA = reparsed.charToGlyph('A');
+    log('export TTF valido', !!gA && ab.byteLength > 100, ab.byteLength + ' bytes');
+    log('glyph B vacio ok', reparsed.charToGlyph('B') !== null);
+
+    var oldW = editor._cells.get(65).canvas.width;
+    editor.setCellSize(200);
+    log('cambio tamaño celda', editor._cells.get(65).canvas.width > oldW, oldW + ' -> ' + editor._cells.get(65).canvas.width);
+
+    var rn = FTImporter.defaultGlyphSet();
+    log('default set 190', rn.size >= 190);
+  } catch (e) {
+    results.push('ERROR ' + e.message + ' | ' + e.stack.split('\n')[1]);
+  }
+  document.getElementById('results').textContent = results.join(' | ');
+  document.title = results.some(function (r) { return /^FAIL|^ERROR/.test(r); }) ? 'HARNESS FAIL' : 'HARNESS PASS';
+})();
+</script>
+</body>
+</html>

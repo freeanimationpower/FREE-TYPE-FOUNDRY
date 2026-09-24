@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Free Type Foundry &mdash; Editor de tipografías</title>
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&family=Outfit:wght@700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/opentype.js@1.3.4/dist/opentype.min.js"></script>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-mark"><img src="favicon.png" alt="Free Type Foundry" width="36" height="36"></span>
+    <div class="brand-text">
+      <strong>Free Type Foundry</strong>
+      <small>Editor de tipografías &mdash; cada letra se edita en su propio recuadro</small>
+    </div>
+  </div>
+  <div class="top-actions">
+    <label class="field-inline">
+      <span>Nombre de la fuente</span>
+      <input type="text" id="familyName" value="Free Type Foundry" maxlength="60">
+    </label>
+    <button id="btnNew" class="btn btn-ghost">Nueva fuente</button>
+    <button id="btnImport" class="btn btn-ghost">Subir TTF / OTF</button>
+    <button id="btnSave" class="btn btn-ghost">Guardar proyecto</button>
+    <button id="btnLoad" class="btn btn-ghost">Abrir proyecto</button>
+    <button id="btnExport" class="btn btn-primary">Exportar TTF</button>
+  </div>
+</header>
+
+<div class="toolbar" id="toolbar">
+  <button class="tool active" data-tool="select" title="Seleccionar y mover puntos (V)"><svg viewBox="0 0 24 24"><path d="M5 3l14 8-6 2-3 6z"/></svg><span>Mover</span></button>
+  <button class="tool" data-tool="add" title="Añadir punto sobre un trazo (A)"><svg viewBox="0 0 24 24"><path d="M12 4v16M4 12h16"/></svg><span>Punto</span></button>
+  <button class="tool" data-tool="delete" title="Borrar punto (D)"><svg viewBox="0 0 24 24"><path d="M4 12h16M9 7l-5 5 5 5"/></svg><span>Borrar</span></button>
+  <button class="tool" data-tool="draw" title="Dibujar trazo libre (B)"><svg viewBox="0 0 24 24"><path d="M3 17c4-9 7-13 12-13 3 0 5 2 5 4-6 0-11 4-13 9z"/></svg><span>Dibujar</span></button>
+  <button class="tool" data-tool="line" title="Contorno con líneas rectas (L)"><svg viewBox="0 0 24 24"><path d="M3 20L11 6l4 6 6-8"/></svg><span>Línea</span></button>
+  <button class="tool" data-tool="erase" title="Borrar contorno completo (E)"><svg viewBox="0 0 24 24"><path d="M4 20h16M9 20L17 7l-3-2-8 13z"/></svg><span>Contorno</span></button>
+  <span class="tool-sep"></span>
+  <button id="btnSmooth" class="tool" title="Suavizar esquina del punto seleccionado"><svg viewBox="0 0 24 24"><path d="M4 16c6 0 10-8 16-8"/></svg><span>Suavizar</span></button>
+  <button id="btnCurve" class="tool" title="Convertir segmento en curva"><svg viewBox="0 0 24 24"><path d="M4 17c4-10 9-13 16-13"/><circle cx="20" cy="4" r="1.6"/></svg><span>Curva</span></button>
+  <button id="btnLine" class="tool" title="Convertir segmento en recta"><svg viewBox="0 0 24 24"><path d="M4 19L20 5"/></svg><span>Recta</span></button>
+  <button id="btnClear" class="tool" title="Vaciar el glifo seleccionado"><svg viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M7 7l1 13h8l1-13"/></svg><span>Vaciar</span></button>
+  <span class="tool-sep"></span>
+  <button id="btnUndo" class="tool" title="Deshacer (Ctrl+Z)"><svg viewBox="0 0 24 24"><path d="M8 5L3 10l5 5M3 10h10a6 6 0 010 12h-3"/></svg><span>Deshacer</span></button>
+  <button id="btnRedo" class="tool" title="Rehacer (Ctrl+Y)"><svg viewBox="0 0 24 24"><path d="M16 5l5 5-5 5M21 10H11a6 6 0 000 12h3"/></svg><span>Rehacer</span></button>
+  <span class="tool-sep"></span>
+  <label class="brush-control" id="brushControl" hidden>
+    <span>Grosor</span>
+    <input type="range" id="brushSize" min="10" max="200" value="70">
+    <span id="brushValue">70</span>
+  </label>
+  <label class="zoom-control">
+    <span>Celda</span>
+    <input type="range" id="cellSize" min="80" max="260" value="140">
+    <span id="cellSizeValue">140px</span>
+  </label>
+</div>
+
+<div class="grid-tools">
+  <div class="tabs" id="filterTabs">
+    <button class="tab active" data-filter="basic">Básico</button>
+    <button class="tab" data-filter="latin">Latín-1</button>
+    <button class="tab" data-filter="punct">Puntos</button>
+    <button class="tab" data-filter="all">Todo</button>
+  </div>
+  <input type="text" id="gridSearch" placeholder="Buscar A o 0041">
+  <button id="btnAddGlyph" class="btn btn-mini btn-primary" title="Añadir un nuevo carácter a la fuente">+ Glifo</button>
+</div>
+
+<main class="grid-area" id="gridArea">
+  <div class="cells" id="cells"></div>
+  <div class="board-hint" id="boardHint">Cada recuadro es una letra: edita sus puntos directamente dentro de él. La línea roja es la base; la azul punteada, el avance.</div>
+</main>
+
+<footer class="statusbar">
+  <span id="glyphInfo">U+0041 · 'A' · 0 contornos · 0 puntos</span>
+  <label class="field-inline compact">
+    <span>Avance</span>
+    <input type="number" id="advanceWidth" min="0" max="4000" value="620">
+  </label>
+  <span class="zoom-info" id="zoomInfo">Tablero: todas las letras a la misma escala</span>
+</footer>
+
+<footer class="site-footer">
+  <a href="https://www.freeanimationpower.org" target="_blank" rel="noopener">www.freeanimationpower.org</a>
+</footer>
+
+<input type="file" id="fileImport" accept=".ttf,.otf,.woff,.woff2" hidden>
+<input type="file" id="fileLoad" accept=".ftf,application/json" hidden>
+<div class="toast" id="toast"></div>
+
+<script src="js/geometry.js"></script>
+<script src="js/importer.js"></script>
+<script src="js/exporter.js"></script>
+<script src="js/editor.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

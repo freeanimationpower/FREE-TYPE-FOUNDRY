@@ -1,0 +1,24 @@
+{
+  "name": "free-type-foundry",
+  "version": "1.0.0",
+  "description": "Free Type Foundry - Editor de tipografias 100% en el navegador. Sube una fuente, edita cada letra en su propio recuadro y exporta tu propia fuente TTF instalable. By Free Animation Power.",
+  "private": true,
+  "scripts": {
+    "test": "node tests/geometry.js && node tests/export.js && node tests/import-real.js"
+  },
+  "keywords": [
+    "font",
+    "typography",
+    "ttf",
+    "otf",
+    "editor",
+    "bezier",
+    "free-animation-power"
+  ],
+  "author": "Eduardo Fierro Duque",
+  "license": "GPL-3.0",
+  "type": "commonjs",
+  "dependencies": {
+    "opentype.js": "^1.3.4"
+  }
+}
