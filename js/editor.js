@@ -7,6 +7,12 @@
   var HOVER_OFF = '#ff5c33';
   var SELECT_PT = '#ff4200';
 
+  function labelChar(u) {
+    if (u === 32) return 'SP';
+    if (u < 32 || (u >= 127 && u <= 160) || u === 173) return '?';
+    return String.fromCharCode(u);
+  }
+
   function GridEditor(container, callbacks) {
     this.container = container;
     this.cb = callbacks || {};
@@ -81,7 +87,7 @@
       var lbl = document.createElement('div');
       lbl.className = 'glabel';
       var u = g.unicode;
-      lbl.textContent = u === 32 ? '␣' : (u >= 33 && u <= 126 ? String.fromCharCode(u) : String.fromCharCode(u));
+      lbl.textContent = labelChar(u);
       var hx = document.createElement('div');
       hx.className = 'ghex';
       hx.textContent = u.toString(16).toUpperCase().padStart(4, '0');

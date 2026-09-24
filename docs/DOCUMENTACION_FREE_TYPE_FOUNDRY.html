@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
@@ -82,14 +82,15 @@
 <body>
 
 <div class="portada">
-  <img src="LOGO FREE TYPE FOUNDRY.png" alt="Free Type Foundry">
+  <img src="../LOGO FREE TYPE FOUNDRY.png" alt="Free Type Foundry" width="150" height="150">
   <h1>Free Type Foundry</h1>
   <p class="sub">Editor de tipografías 100% en el navegador</p>
   <p class="sub">Sube una fuente, edita cada letra en su recuadro y exporta tu propia fuente TTF instalable</p>
   <p class="url">www.freeanimationpower.org</p>
   <div class="meta">
+    <strong>RESPONSABLE DEL PROYECTO: EDUARDO FIERRO DUQUE</strong><br>
     Documentación técnica completa · Versión 1.0 · Septiembre 2026<br>
-    Autor: Eduardo Fierro Duque · Ecosistema Free Animation Power · Licencia GPL v3.0
+    Ecosistema Free Animation Power · Licencia GPL v3.0
   </div>
 </div>
 
@@ -137,7 +138,7 @@
   <tr><td>Añadir puntos</td><td>Clic sobre un trazo inserta un punto que preserva la forma</td></tr>
   <tr><td>Dibujo libre</td><td>Trazo con presión de lápiz convertido en contorno vectorial suavizado</td></tr>
   <tr><td>Líneas rectas</td><td>Contornos polígono punto a punto</td></tr>
-  <tr><td>Curvas</td><td>Conversión recta ↔ curva por segmento y suavizado de esquinas</td></tr>
+  <tr><td>Curvas</td><td>Conversión recta a curva por segmento y suavizado de esquinas</td></tr>
   <tr><td>Borrado seguro</td><td>Vista previa en rojo del contorno antes de eliminarlo</td></tr>
   <tr><td>Avance</td><td>Advance width editable por glifo (línea azul punteada)</td></tr>
   <tr><td>Guías</td><td>Línea base, altura x, mayúsculas, ascendente y descendente</td></tr>
@@ -158,27 +159,27 @@
 <h2 id="q4">4. Estructura de archivos</h2>
 <pre>
 FREE-TYPE-FOUNDRY/
-├── index.html                    Interfaz completa
-├── style.css                     Tema corporativo (negro + naranja #ff3300)
-├── favicon.png                   Logo 64x64
-├── LOGO FREE TYPE FOUNDRY.png    Logo oficial 1254x1254
-├── js/
-│   ├── geometry.js               Motor geométrico Bézier (cero dependencias)
-│   ├── importer.js               Parse TTF/OTF/WOFF → modelo interno
-│   ├── exporter.js               Modelo interno → TTF + proyectos .ftf
-│   ├── editor.js                 FTGridEditor: render e interacción del tablero
-│   └── main.js                   Estado global, UI, undo/redo, atajos
-├── tests/                        Pruebas Node + harness de navegador
-├── docs/                         Documentación (HTML y PDF)
-├── GUIA-RAPIDA.md                Guía simplificada
-└── README.md                     Documentación completa (markdown)
+|-- index.html                    Interfaz completa
+|-- style.css                     Tema corporativo (negro + naranja #ff3300)
+|-- favicon.png                   Logo 64x64
+|-- LOGO FREE TYPE FOUNDRY.png    Logo oficial 1254x1254
+|-- js/
+|   |-- geometry.js               Motor geométrico Bézier (cero dependencias)
+|   |-- importer.js               Parse TTF/OTF/WOFF -> modelo interno
+|   |-- exporter.js               Modelo interno -> TTF + proyectos .ftf
+|   |-- editor.js                 FTGridEditor: render e interacción del tablero
+|   `-- main.js                   Estado global, UI, undo/redo, atajos
+|-- tests/                        Pruebas Node + harness de navegador
+|-- docs/                         Documentación (HTML y PDF)
+|-- GUIA-RAPIDA.md                Guía simplificada
+`-- README.md                     Documentación completa (markdown)
 </pre>
 
 <h3>Responsabilidades de cada módulo</h3>
-<p><strong>geometry.js</strong> — Puro, funciona en Node y navegador. Define <code>normalizeContour()</code> (resuelve puntos implícitos de TrueType), <code>eachSegment()</code>, <code>commandsToContours()/contoursToCommands()</code>, <code>cubicToQuadratic()</code> (cúbicas → cuadráticas con tolerancia 0.5), <code>insertPointOnSegment()</code> (división por de Casteljau), <code>removePointAt()</code>, <code>smoothAt()</code>, <code>setSegmentCurved()</code>, <code>strokeToContour()</code> (trazo → contorno: offset izquierdo/derecho, Ramer–Douglas–Peucker y Chaikin) y <code>glyphNameFor()</code>.</p>
+<p><strong>geometry.js</strong> — Puro, funciona en Node y navegador. Define <code>normalizeContour()</code> (resuelve puntos implícitos de TrueType), <code>eachSegment()</code>, <code>commandsToContours()/contoursToCommands()</code>, <code>cubicToQuadratic()</code> (cúbicas -> cuadráticas con tolerancia 0.5), <code>insertPointOnSegment()</code> (división por de Casteljau), <code>removePointAt()</code>, <code>smoothAt()</code>, <code>setSegmentCurved()</code>, <code>strokeToContour()</code> (trazo -> contorno: offset izquierdo/derecho, Ramer–Douglas–Peucker y Chaikin) y <code>glyphNameFor()</code>.</p>
 <p><strong>importer.js</strong> — <code>parseFont()</code> lee el binario con <code>opentype.parse()</code>, normaliza a 1000 UPM, conserva solo glifos con Unicode, convierte comandos a contornos internos y devuelve <code>{familyName, glyphs, count}</code>. <code>defaultGlyphSet()</code> crea la fuente en blanco (códigos 32–126 y 161–255, avance 620).</p>
 <p><strong>exporter.js</strong> — <code>buildFont()</code> crea <code>.notdef</code> (glifo 0), ordena por Unicode, construye cada glifo con su Path Q y escribe metadatos (familia, diseñador, fabricante, licencia, versión, copyright). <code>toArrayBuffer()</code> produce el binario TTF. También <code>serializeProject()/deserializeProject()</code>.</p>
-<p><strong>editor.js</strong> — <code>FTGridEditor</code>: construye celdas DOM con render diferido (IntersectionObserver), pinta guías, glifo en negro intenso, puntos, selección, borrador y trazo en curso. Transformación mundo↔celda con eje Y volteado (evita letras cabeza abajo). Hit-testing de puntos (7px) y segmentos (25 muestras en curvas). Arrastre con Pointer Events y captura de puntero. <code>_commit()</code> alimenta el historial con snapshots.</p>
+<p><strong>editor.js</strong> — <code>FTGridEditor</code>: construye celdas DOM con render diferido (IntersectionObserver), pinta guías, glifo en negro intenso, puntos, selección, borrador y trazo en curso. Transformación mundo a celda con eje Y volteado (evita letras cabeza abajo). Hit-testing de puntos (7px) y segmentos (25 muestras en curvas). Arrastre con Pointer Events y captura de puntero. <code>_commit()</code> alimenta el historial con snapshots.</p>
 <p><strong>main.js</strong> — Estado global, planilla con filtros y buscador, undo/redo (200 entradas), topbar (nueva/subir/guardar/abrir/exportar), atajos y slider de celda.</p>
 
 <h2 id="q5">5. El tablero de letras (planilla)</h2>
@@ -284,8 +285,8 @@ FREE-TYPE-FOUNDRY/
 </ol>
 <h3>Instalación</h3>
 <ul>
-  <li><strong>Windows:</strong> doble clic → Instalar.</li>
-  <li><strong>macOS:</strong> doble clic → Instalar fuente.</li>
+  <li><strong>Windows:</strong> doble clic -> Instalar.</li>
+  <li><strong>macOS:</strong> doble clic -> Instalar fuente.</li>
   <li><strong>Linux:</strong> copiar a <code>~/.fonts</code> o <code>/usr/share/fonts</code> y ejecutar <code>fc-cache -f</code>.</li>
 </ul>
 
@@ -336,8 +337,8 @@ FREE-TYPE-FOUNDRY/
 <pre>
 npm install
 node tests/geometry.js       19 tests del motor geométrico
-node tests/export.js         roundtrip: TTF generado → re-leído → verificado
-node tests/import-real.js    importación de arial.ttf real (upm 2048 → 1000)
+node tests/export.js         roundtrip: TTF generado -> re-leído -> verificado
+node tests/import-real.js    importación de arial.ttf real (upm 2048 -> 1000)
 node tests/flip.js           inspección de comandos exportados
 </pre>
 <p>El harness de navegador <code>tests/harness.html</code> (14 pruebas integrales) se abre en cualquier navegador o con <code>php -S 127.0.0.1:8899 -t .</code> y visitando <code>/tests/harness.html</code>.</p>
@@ -372,3 +373,5 @@ node tests/flip.js           inspección de comandos exportados
 
 </body>
 </html>
+
+

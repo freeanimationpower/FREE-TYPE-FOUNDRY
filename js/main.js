@@ -61,7 +61,7 @@
     }
     var pts = 0;
     for (var i = 0; i < g.contours.length; i++) pts += g.contours[i].length;
-    var ch = g.unicode === 32 ? '␣' : String.fromCharCode(g.unicode);
+    var ch = g.unicode === 32 ? 'SP' : (g.unicode < 32 || (g.unicode >= 127 && g.unicode <= 160) || g.unicode === 173 ? '?' : String.fromCharCode(g.unicode));
     info.textContent = 'U+' + hexLabel(g.unicode) + " · '" + ch + "' · " + g.contours.length + ' contornos · ' + pts + ' puntos';
   }
 
