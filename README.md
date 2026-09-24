@@ -61,6 +61,7 @@ No necesitas instalar nada: se abre con doble clic. Todo el trabajo (importar, e
 | Avance (advance width) | Editable por glifo, visible como línea azul punteada |
 | Guías métricas | Línea base, altura x, altura de mayúsculas, ascendente y descendente |
 | Zoom global | Todas las celdas crecen juntas para editar cómodo |
+| Responsive | Columnas adaptables (6 escritorio / 4 tablet / 2 móvil), toolbar táctil |
 | Exportación | TTF estándar con metadatos completos (nombre, diseñador, licencia) |
 | Proyectos | Guardar/abrir como `.ftf` (JSON) para continuar otro día |
 | Deshacer | Historial de 200 acciones con Ctrl+Z / Ctrl+Y |
@@ -90,7 +91,7 @@ Se empaqueta como un único `tools/font/index.php` dentro del hub Free Animation
 ```
 FREE-TYPE-FOUNDRY/
 ├── index.html                    # Interfaz completa (topbar, toolbar, tablero, footer)
-├── style.css                     # Tema corporativo (negro + naranja del logo #ff3300)
+├── style.css                     # Tema: fondo negro, header y panel inferior amarillo #ffdc00, acentos naranja #ff3300 (logo). Responsive móvil/tablet.
 ├── favicon.png                   # Logo a 64x64 (generado desde el logo original)
 ├── LOGO FREE TYPE FOUNDRY.png    # Logo oficial (1254x1254)
 ├── js/
@@ -182,6 +183,16 @@ Botón **+ Glifo** → escribe el carácter o su código hex. Si ya existe, se s
 ### Tamaño de celda
 
 El slider **Celda** (80–260px) agranda o reduce **todas** las celdas a la vez manteniendo la misma escala relativa, de modo que editar un detalle fino es tan fácil como ver la fuente completa. Equivalente por teclado: `+`, `-` y `0` (reset a 140px).
+
+### Diseño responsive (móvil y tablet)
+
+El tablero adapta automáticamente sus columnas al ancho de pantalla: **6 columnas en escritorio**, 4 en tablet y 2 en móvil (mínimo 1 en pantallas muy angostas), recalculándose al rotar o redimensionar. Además:
+
+- El **header** se apila verticalmente en pantallas angostas y los botones quedan alineados con el campo de nombre de la fuente.
+- La **toolbar de herramientas** se vuelve desplazable horizontalmente con el dedo.
+- El **dibujo táctil funciona con el dedo o lápiz** (`touch-action: none` en las celdas) sin que la página haga scroll mientras trazas.
+- Las pestañas y el buscador se expanden a lo ancho; el footer se apila en columna.
+- Los círculos de letra se compactan (26px) para no robar espacio de dibujo.
 
 ---
 

@@ -98,7 +98,7 @@
       this.container.appendChild(cell);
       this._cells.set(u, { cell: cell, canvas: cv, glyph: g });
     }
-    this.container.style.gridTemplateColumns = 'repeat(6, ' + m.w + 'px)';
+    this._updateColumns();
     this._setupLazyDraw();
   };
 
@@ -373,10 +373,18 @@
       entry.drawn = false;
     });
     if (this.container.style) {
-      this.container.style.gridTemplateColumns = 'repeat(6, ' + m.w + 'px)';
+      this._updateColumns();
     }
     this._setupLazyDraw();
     if (this.cb.onCellSize) this.cb.onCellSize(px);
+  };
+
+  GridEditor.prototype._updateColumns = function () {
+    var m = this.metrics();
+    var gap = 10;
+    var avail = this.container.clientWidth || 800;
+    var cols = Math.max(1, Math.min(6, Math.floor((avail + gap) / (m.w + gap))));
+    this.container.style.gridTemplateColumns = 'repeat(' + cols + ', ' + m.w + 'px)';
   };
 
   GridEditor.prototype.selectGlyph = function (u) {
@@ -397,6 +405,11 @@
     this.container.addEventListener('pointermove', function (e) { self._onMove(e); });
     global.addEventListener('pointerup', function (e) { self._onUp(e); });
     this.container.addEventListener('dblclick', function (e) { self._onDblClick(e); });
+    this._resizeTimer = null;
+    global.addEventListener('resize', function () {
+      clearTimeout(self._resizeTimer);
+      self._resizeTimer = setTimeout(function () { self._updateColumns(); }, 160);
+    });
   };
 
   GridEditor.prototype._entryFromEvent = function (e) {

@@ -143,6 +143,7 @@
   <tr><td>Avance</td><td>Advance width editable por glifo (línea azul punteada)</td></tr>
   <tr><td>Guías</td><td>Línea base, altura x, mayúsculas, ascendente y descendente</td></tr>
   <tr><td>Zoom global</td><td>Slider que agranda todas las celdas a la vez</td></tr>
+  <tr><td>Responsive</td><td>Columnas adaptables (6 escritorio / 4 tablet / 2 móvil), toolbar táctil con el dedo</td></tr>
   <tr><td>Exportación</td><td>TTF estándar con metadatos completos</td></tr>
   <tr><td>Proyectos</td><td>Guardar/abrir como .ftf (JSON)</td></tr>
   <tr><td>Deshacer</td><td>Historial de 200 acciones (Ctrl+Z / Ctrl+Y)</td></tr>
@@ -201,6 +202,19 @@ FREE-TYPE-FOUNDRY/
 <p>El buscador acepta carácter (<code>A</code>), código (<code>0041</code>) o nombre del glifo. El botón <strong>+ Glifo</strong> añade caracteres nuevos; si ya existen, los selecciona.</p>
 <h3>Tamaño de celda</h3>
 <p>El slider <strong>Celda</strong> (80–260px) agranda o reduce todas las celdas a la vez manteniendo la escala relativa. Por teclado: <code>+</code>, <code>-</code> y <code>0</code> (reset 140px).</p>
+
+<h3>Diseño responsive (móvil y tablet)</h3>
+<p>El tablero adapta automáticamente sus columnas al ancho de pantalla: <strong>6 columnas en escritorio</strong>, 4 en tablet y 2 en móvil (mínimo 1 en pantallas muy angostas), recalculándose al rotar o redimensionar la ventana. Además:</p>
+<ul>
+  <li>El <strong>header</strong> se apila verticalmente en pantallas angostas y los botones quedan alineados con el campo de nombre de la fuente.</li>
+  <li>La <strong>toolbar de herramientas</strong> se vuelve desplazable horizontalmente con el dedo.</li>
+  <li>El <strong>dibujo táctil funciona con el dedo o lápiz</strong> (touch-action: none en las celdas) sin que la página haga scroll mientras se traza.</li>
+  <li>Las pestañas y el buscador se expanden a lo ancho; el footer se apila en columna.</li>
+  <li>Los círculos de letra se compactan (26px) para no robar espacio de dibujo.</li>
+</ul>
+
+<h3>Tema visual</h3>
+<p>Fondo negro (#070706) con <strong>header y panel inferior en amarillo corporativo #ffdc00</strong> (concordante con las herramientas del ecosistema como Storyboard), texto negro sobre amarillo y acentos en el <strong>naranja del logotipo #ff3300</strong>. El área de trabajo mantiene celdas blancas con glifos en negro intenso. El panel inferior enlaza a www.freeanimationpower.org y www.fierroduque.com.</p>
 
 <h2 id="q6">6. Guías métricas de cada recuadro</h2>
 <table>
