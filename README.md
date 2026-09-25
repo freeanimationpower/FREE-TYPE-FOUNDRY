@@ -5,6 +5,10 @@
 **Editor de tipografías 100% en el navegador.** Sube una fuente existente (TTF/OTF/WOFF), edita cada letra dentro de su propio recuadro — moviendo y añadiendo puntos Bézier o dibujando a mano alzada con presión de lápiz — y exporta tu propia fuente **TTF instalable** en Windows, macOS o Linux.
 
 Parte del ecosistema **[Free Animation Power](https://www.freeanimationpower.org)** · Creado por Eduardo Fierro Duque · GPL v3.0
+<img width="1911" height="867" alt="image" src="https://github.com/user-attachments/assets/344ba5c8-8375-40e2-a36e-4b729986b7f8" />
+<img width="1911" height="865" alt="image" src="https://github.com/user-attachments/assets/6eff7787-e714-4a7d-9cce-bffe06588267" />
+<img width="1913" height="866" alt="image" src="https://github.com/user-attachments/assets/b667d727-ef3e-4369-ab05-7836fd898eab" />
+
 
 ---
 
