@@ -2,6 +2,8 @@
 
 ![Free Type Foundry](LOGO%20FREE%20TYPE%20FOUNDRY.png)
 
+**Disponible en vivo:** https://freeanimationpower.org/tools/foundry/
+
 **Editor de tipografías 100% en el navegador.** Sube una fuente existente (TTF/OTF/WOFF), edita cada letra dentro de su propio recuadro — moviendo y añadiendo puntos Bézier o dibujando a mano alzada con presión de lápiz — y exporta tu propia fuente **TTF instalable** en Windows, macOS o Linux.
 
 Parte del ecosistema **[Free Animation Power](https://www.freeanimationpower.org)** · Creado por Eduardo Fierro Duque · GPL v3.0

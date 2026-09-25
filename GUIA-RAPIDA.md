@@ -2,6 +2,8 @@
 
 ![Free Type Foundry](LOGO%20FREE%20TYPE%20FOUNDRY.png)
 
+**Disponible en vivo:** https://freeanimationpower.org/tools/foundry/
+
 Editor de tipografías en el navegador: edita cada letra en su recuadro y exporta tu propia fuente TTF instalable.
 
 ## Empezar (3 pasos)
