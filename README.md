@@ -50,6 +50,8 @@ No necesitas instalar nada: se abre con doble clic. Todo el trabajo (importar, e
 1. **Empieza de cero** con la fuente en blanco (viene con los caracteres ASCII y Latín-1 pre-creados) **o sube una fuente existente** para modificarla.
 2. **Edita cada letra en su recuadro**: mueve puntos, añade curvas, dibuja trazos.
 3. **Exporta el TTF** y lo instalas en tu sistema operativo para usarlo en Word, Photoshop, tu página web o cualquier programa.
+4. 
+<img width="1916" height="871" alt="image" src="https://github.com/user-attachments/assets/5a8c15db-a285-4e5c-8f1f-2c3f966814e6" />
 
 ---
 
