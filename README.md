@@ -7,6 +7,13 @@
 **Editor de tipografías 100% en el navegador.** Sube una fuente existente (TTF/OTF/WOFF), edita cada letra dentro de su propio recuadro — moviendo y añadiendo puntos Bézier o dibujando a mano alzada con presión de lápiz — y exporta tu propia fuente **TTF instalable** en Windows, macOS o Linux.
 
 Parte del ecosistema **[Free Animation Power](https://www.freeanimationpower.org)** · Creado por Eduardo Fierro Duque · GPL v3.0
+<img width="1911" height="867" alt="image" src="https://github.com/user-attachments/assets/344ba5c8-8375-40e2-a36e-4b729986b7f8" />
+<img width="1911" height="865" alt="image" src="https://github.com/user-attachments/assets/6eff7787-e714-4a7d-9cce-bffe06588267" />
+<img width="1913" height="866" alt="image" src="https://github.com/user-attachments/assets/b667d727-ef3e-4369-ab05-7836fd898eab" />
+<img width="1917" height="870" alt="image" src="https://github.com/user-attachments/assets/a8a7c9c2-ca38-4be7-ac0f-094925daab0d" />
+<img width="1912" height="873" alt="image" src="https://github.com/user-attachments/assets/2b594eb6-e856-42f9-8cc7-d810c6ca8af8" />
+
+
 
 ---
 
@@ -45,6 +52,8 @@ No necesitas instalar nada: se abre con doble clic. Todo el trabajo (importar, e
 1. **Empieza de cero** con la fuente en blanco (viene con los caracteres ASCII y Latín-1 pre-creados) **o sube una fuente existente** para modificarla.
 2. **Edita cada letra en su recuadro**: mueve puntos, añade curvas, dibuja trazos.
 3. **Exporta el TTF** y lo instalas en tu sistema operativo para usarlo en Word, Photoshop, tu página web o cualquier programa.
+4. 
+<img width="1916" height="871" alt="image" src="https://github.com/user-attachments/assets/5a8c15db-a285-4e5c-8f1f-2c3f966814e6" />
 
 ---
 
